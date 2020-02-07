@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="pal/j2se/java"/>
+	<classpathentry kind="src" path="src/teamwork/java"/>
+	<classpathentry kind="src" path="src/j2se/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry exported="true" kind="lib" path="libs/joda-time-2.9.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/j2se/guava-25.1-jre.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/slf4j-api-1.7.25.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

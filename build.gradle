@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs += 'src/main/java'
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(dir:'libs', include: ['*.jar'])
+
+    // Android Studio 에서는 아래의 파일을 추가해야 됨. 더 좋은 방법을 찾게 되면 변경 바람.
+    if (project.targetPlatform == 'android') {
+        testCompile files('libs/j2se/sqlite-jdbc-3.27.2.1.jar')
+        compile fileTree(dir:'libs/android/guava-25.1-android.jar')
+    }
+    else {
+        compile fileTree(dir:'libs/j2se', include: ['*.jar'])
+//        compile fileTree(dir:'libs/j2se/guava-25.1-jre.jar')
+    }
+}
