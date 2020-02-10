@@ -12,7 +12,8 @@ sourceSets {
 
 dependencies {
     compile fileTree(dir:'libs', include: ['*.jar'])
-
+    compile fileTree(dir:'libs/test', include : ['*.jar'])
+    
     // Android Studio 에서는 아래의 파일을 추가해야 됨. 더 좋은 방법을 찾게 되면 변경 바람.
     if (project.targetPlatform == 'android') {
         testCompile files('libs/j2se/sqlite-jdbc-3.27.2.1.jar')
