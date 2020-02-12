@@ -9,18 +9,21 @@ sourceSets {
     }
 }
 
-
 dependencies {
-    compile fileTree(dir:'libs', include: ['*.jar'])
-    compile fileTree(dir:'libs/test', include : ['*.jar'])
-    
-    // Android Studio 에서는 아래의 파일을 추가해야 됨. 더 좋은 방법을 찾게 되면 변경 바람.
+
     if (project.targetPlatform == 'android') {
-        testCompile files('libs/j2se/sqlite-jdbc-3.27.2.1.jar')
-        compile fileTree(dir:'libs/android/guava-25.1-android.jar')
+        testCompile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.27.2.1'
+        compile group: 'com.google.guava', name: 'guava', version: '25.1-android'
     }
     else {
-        compile fileTree(dir:'libs/j2se', include: ['*.jar'])
-//        compile fileTree(dir:'libs/j2se/guava-25.1-jre.jar')
+        compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
+        compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+        compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.27.2.1'
+
+        compile fileTree(dir : 'libs/test', include : ['j2objc_annotations.jar', 'j2objc_junit.jar'])
     }
+
+    compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 }
