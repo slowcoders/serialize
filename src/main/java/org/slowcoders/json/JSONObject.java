@@ -177,7 +177,7 @@ public class JSONObject {
     /**
      * Creates a new {@code JSONObject} with from the Input Stream.
      *
-     * @param json a JSON-encoded string containing an object.
+     * @param in a Reader to containing an json stream.
      * @throws JSONException if the parse fails or doesn't yield a {@code
      *     JSONObject}.
      */
