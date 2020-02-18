@@ -6,7 +6,7 @@ import org.slowcoders.util.ClassUtils;
 
 public class PAL {
 
-    private static final String CONFIG_IMPL = "org.slowcoders.pal.StormConfig";
+    private static final String CONFIG_IMPL = "org.slowcoders.pal.PALConfig";
 
     private static final Impl impl = ClassUtils.newInstance(CONFIG_IMPL);
 
