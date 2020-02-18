@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-public class StormConfig implements PAL.Impl {
+public class PALConfig implements PAL.Impl {
 
     private static final Storage storage = new Storage(/* shoud pass android context */);
     private static final AsyncExecutor executor = new AsyncExecutor();
