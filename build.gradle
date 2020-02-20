@@ -1,4 +1,57 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
+    }
+}
+
 apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+group 'org.slowcoders'
+version '1.0.0'
+
+bintray {
+    user = findProperty('maven.username')
+    key = findProperty('maven.password')
+    publications = ['publication']
+
+    publish = false
+
+    pkg {
+        repo = 'slowcoders'
+        name = 'serialize'
+        vcsUrl = 'https://github.com/slowcoders/serialize.git'
+        version {
+            name = project.version
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+publishing {
+    publications {
+        publication(MavenPublication) {
+            from components.java
+            groupId project.group
+            artifactId = 'serialize'
+            version project.version
+
+            artifact sourcesJar
+        }
+    }
+}
+
+repositories {
+    jcenter()
+}
 
 
 sourceSets {
@@ -9,19 +62,15 @@ sourceSets {
     }
 }
 
+ext {
+    targetPlatform = 'java'
+}
+
 dependencies {
-
     if (project.targetPlatform == 'android') {
-        testCompile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.27.2.1'
-        compile group: 'com.google.guava', name: 'guava', version: '25.1-android'
+        implementation group: 'com.google.guava', name: 'guava', version: '25.1-android'
+    } else {
+        implementation group: 'com.google.guava', name: 'guava', version: '25.1-jre'
     }
-    else {
-        compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
-        compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
-        compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.27.2.1'
-    }
-
-    compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
-    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'joda-time', name: 'joda-time', version: '2.9.9'
 }
