@@ -19,7 +19,7 @@ bintray {
     key = findProperty('maven.password')
     publications = ['publication']
 
-    publish = false
+    publish = true
 
     pkg {
         repo = 'slowcoders'
