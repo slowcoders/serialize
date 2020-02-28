@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-// Note: this class was written without inspecting the non-free org.nine.json sourcecode.
+// Note: this class was written without inspecting the non-free org.json sourcecode.
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings.
@@ -175,9 +175,9 @@ public class JSONObject {
     }
 
     /**
-     * Creates a new {@code JSONObject} with from the Input Stream.
+     * Creates a new {@code JSONObject} with from the Reader.
      *
-     * @param in a Reader to containing an json stream.
+     * @param in a Readear.
      * @throws JSONException if the parse fails or doesn't yield a {@code
      *     JSONObject}.
      */
@@ -408,7 +408,7 @@ public class JSONObject {
      *
      * @throws JSONException if no such mapping exists.
      */
-    public Object get(String name, Object fallback) throws JSONException {
+    public Object opt(String name, Object fallback) throws JSONException {
         Object result = nameValuePairs.get(name);
         if (result == null) {
             return fallback;
@@ -436,7 +436,7 @@ public class JSONObject {
      * Returns the value mapped by {@code name} if it exists and is a boolean or
      * can be coerced to a boolean, or {@code fallback} otherwise.
      */
-    public boolean getBoolean(String name, boolean fallback) {
+    public boolean optBoolean(String name, boolean fallback) {
         Object object = nameValuePairs.get(name);
         Boolean result = JSON.toBoolean(object);
         return result != null ? result : fallback;
@@ -461,7 +461,7 @@ public class JSONObject {
      * Returns the value mapped by {@code name} if it exists and is a double or
      * can be coerced to a double, or {@code fallback} otherwise.
      */
-    public double getDouble(String name, double fallback) {
+    public double optDouble(String name, double fallback) {
         Object object = nameValuePairs.get(name);
         Double result = JSON.toDouble(object);
         return result != null ? result : fallback;
@@ -487,7 +487,7 @@ public class JSONObject {
      * Returns the value mapped by {@code name} if it exists and is an int or
      * can be coerced to an int, or {@code fallback} otherwise.
      */
-    public int getInt(String name, int fallback) {
+    public int optInt(String name, int fallback) {
         Object object = nameValuePairs.get(name);
         Integer result = JSON.toInteger(object);
         return result != null ? result : fallback;
@@ -517,7 +517,7 @@ public class JSONObject {
      * numbers as doubles, so this is <a href="#lossy">lossy</a>; use strings to transfer
      * numbers via JSON.
      */
-    public long getLong(String name, long fallback) {
+    public long optLong(String name, long fallback) {
         Object object = nameValuePairs.get(name);
         Long result = JSON.toLong(object);
         return result != null ? result : fallback;
@@ -542,7 +542,7 @@ public class JSONObject {
      * Returns the value mapped by {@code name} if it exists, coercing it if
      * necessary, or {@code fallback} if no such mapping exists.
      */
-    public String getString(String name, String fallback) {
+    public String optString(String name, String fallback) {
         Object object = nameValuePairs.get(name);
         String result = JSON.toString(object);
         return result != null ? result : fallback;
@@ -568,7 +568,7 @@ public class JSONObject {
      * Returns the value mapped by {@code name} if it exists and is a {@code
      * JSONArray}, or null otherwise.
      */
-    public JSONArray getJSONArray(String name, JSONArray fallback) {
+    public JSONArray optJSONArray(String name, JSONArray fallback) {
         Object object = nameValuePairs.get(name);
         return object != null ? (JSONArray) object : fallback;
     }
@@ -592,7 +592,7 @@ public class JSONObject {
      * @throws JSONException if the mapping doesn't exist or is not a {@code
      *     JSONObject}.
      */
-    public JSONObject getJSONObject(String name, JSONObject fallback) throws JSONException {
+    public JSONObject optJSONObject(String name, JSONObject fallback) throws JSONException {
         Object object = nameValuePairs.get(name);
         return object != null ? (JSONObject) object : fallback;
     }

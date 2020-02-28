@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-// Note: this class was written without inspecting the non-free org.nine.json sourcecode.
+// Note: this class was written without inspecting the non-free org.json sourcecode.
 
 /**
- * A dense indexed sequence of super. Values may be any mix of
+ * A dense indexed sequence of values. Values may be any mix of
  * {@link JSONObject JSONObjects}, other {@link JSONArray JSONArrays}, Strings,
  * Booleans, Integers, Longs, Doubles, {@code null} or {@link JSONObject#NULL}.
  * Values may not be {@link Double#isNaN() NaNs}, {@link Double#isInfinite()
@@ -53,17 +53,17 @@ public class JSONArray extends ArrayList<Object> {
 	private static final long serialVersionUID = 4109103251363801145L;
 
 	/**
-     * Creates a {@code JSONArray} with no super.
+     * Creates a {@code JSONArray} with no values.
      */
     public JSONArray() {
     }
 
     /**
-     * Creates a new {@code JSONArray} by copying all super from the given
+     * Creates a new {@code JSONArray} by copying all values from the given
      * collection.
      *
-     * @param copyFrom a collection whose super are of supported types.
-     *     Unsupported super are not permitted and will yield an array in an
+     * @param copyFrom a collection whose values are of supported types.
+     *     Unsupported values are not permitted and will yield an array in an
      *     inconsistent state.
      */
     /* Accept a raw type for API compatibility */
@@ -74,27 +74,6 @@ public class JSONArray extends ArrayList<Object> {
         }
     }
 
-//    /**
-//     * Creates a new {@code JSONArray} with super from the next array in the
-//     * tokener.
-//     *
-//     * @param readFrom a tokener whose nextValue() method will yield a
-//     *     {@code JSONArray}.
-//     * @throws JSONException if the parse fails or doesn't yield a
-//     *     {@code JSONArray}.
-//     */
-//    public JSONArray(JSONTokener readFrom) throws JSONException {
-//        /*
-//         * Getting the parser to populate this could get tricky. Instead, just
-//         * parse to temporary JSONArray and then steal the data from that.
-//         */
-//        Object object = readFrom.nextValue();
-//        if (object instanceof JSONArray) {
-//            super = ((JSONArray) object).super;
-//        } else {
-//            throw JSON.typeMismatch(object, "JSONArray");
-//        }
-//    }
 
     /**
      * Creates a new {@code JSONArray} with super from the JSON string.
@@ -134,7 +113,7 @@ public class JSONArray extends ArrayList<Object> {
         return c.size() > 0;
     }
     /**
-     * Returns the number of super in this array.
+     * Returns the number of values in this array.
      */
     public int length() {
         return super.size();
@@ -188,7 +167,7 @@ public class JSONArray extends ArrayList<Object> {
      * @param value a {@link JSONObject}, {@link JSONArray}, String, Boolean,
      *     Integer, Long, Double, {@link JSONObject#NULL}, or {@code null}. May
      *     not be {@link Double#isNaN() NaNs} or {@link Double#isInfinite()
-     *     infinities}. Unsupported super are not permitted and will cause the
+     *     infinities}. Unsupported values are not permitted and will cause the
      *     array to be in an inconsistent state.
      * @return this array.
      */
@@ -547,8 +526,8 @@ public class JSONArray extends ArrayList<Object> {
     }
 
     /**
-     * Returns a new object whose super are the super in this array, and whose
-     * names are the super in {@code names}. Names and super are paired up by
+     * Returns a new object whose values are the values in this array, and whose
+     * names are the values in {@code names}. Names and values are paired up by
      * index from 0 through to the shorter array's length. Names that are not
      * strings will be coerced to strings. This method returns null if either
      * array is empty.
@@ -567,8 +546,8 @@ public class JSONArray extends ArrayList<Object> {
     }
 
     /**
-     * Returns a new string by alternating this array's super with {@code
-     * separator}. This array's string super are quoted and have their special
+     * Returns a new string by alternating this array's values with {@code
+     * separator}. This array's string values are quoted and have their special
      * characters escaped. For example, the array containing the strings '12"
      * pizza', 'taco' and 'soda' joined on '+' returns this:
      * <pre>"12\" pizza"+"taco"+"soda"</pre>
@@ -626,12 +605,4 @@ public class JSONArray extends ArrayList<Object> {
         stringer.endArray();
     }
 
-//    @Override public boolean equals(Object o) {
-//        return o instanceof JSONArray && ((JSONArray) o).super.equals(super);
-//    }
-//
-//    @Override public int hashCode() {
-//        // diverge from the original, which doesn't implement hashCode
-//        return super.hashCode();
-//    }
 }

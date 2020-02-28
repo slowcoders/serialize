@@ -13,7 +13,6 @@ public class JSONScanner extends LexicalScanner {
 	private boolean inQuoteScanning;
 	private boolean isRawInput;
 
-	// JJ JSONReader 에서 사용하기 위해 public 으로 변경
 	public JSONScanner(Reader in) {
 		super(in);
 		super.setOptionFlags(OPTION_DUMP_SOURCE);

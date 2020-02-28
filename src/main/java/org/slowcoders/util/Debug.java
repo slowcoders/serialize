@@ -27,7 +27,8 @@ public class Debug {
     }
 
     public static void mustImplement(String msg) {
-        System.err.print(msg);
+        String caller = new Throwable().getStackTrace()[1].getMethodName();
+        System.err.print(caller + "() - " + msg);
     }
 
     public static void notTested(String msg) {
@@ -82,10 +83,6 @@ public class Debug {
         }
     }
 
-    public static void temporaryIgnoreException(Exception e) {
-        e.printStackTrace();
-    }
-
     public static void trap() {
         if (!pass) {
             System.err.print("");
@@ -102,7 +99,7 @@ public class Debug {
         wtf(e);
     }
 
-    public static void debugLogging(String message) {
+    public static void verbose(String message) {
         if (DEBUG_VERBOSE) {
             System.out.println(message);
         }

@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.slowcoders.io.util.CharArrayWriterNTS;
 
-// Note: this class was written without inspecting the non-free org.nine.json sourcecode.
+// Note: this class was written without inspecting the non-free org.json sourcecode.
 
 /**
  * Parses a JSON (<a href="http://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>)
