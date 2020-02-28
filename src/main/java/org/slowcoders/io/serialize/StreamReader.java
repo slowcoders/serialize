@@ -17,8 +17,8 @@ public class StreamReader extends DataReader.AutoCloseStream implements StreamDa
 
 	private String containerType;
 	
-	public StreamReader(IOAdapterLoader loader, byte[] data) throws Exception {
-		super(loader);
+	public StreamReader(byte[] data) throws Exception {
+		super();
 		in = ByteBuffer.wrap(data);
 		byte type = in.get();
 		this.itemCount = in.getShort();
@@ -387,7 +387,7 @@ public class StreamReader extends DataReader.AutoCloseStream implements StreamDa
 			return null;
 		}
 		
-		StreamReader in = new StreamReader(this.getLoader(), bytes);
+		StreamReader in = new StreamReader(bytes);
 		return in;
 	}
 

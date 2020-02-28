@@ -5,9 +5,7 @@ import org.slowcoders.json.JSONScanner;
 import org.slowcoders.util.Debug;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class JSONReader extends TextReader {
 
@@ -19,8 +17,8 @@ public class JSONReader extends TextReader {
     private boolean wasNull;
     private String aggregatedType;
 
-    public JSONReader(IOAdapterLoader loader, Reader reader) throws Exception {
-        this(loader, new JSONScanner(reader), detectIsMap(reader));
+    public JSONReader(Reader reader) throws Exception {
+        this(new JSONScanner(reader), detectIsMap(reader));
     }
 
 	@Override
@@ -28,8 +26,8 @@ public class JSONReader extends TextReader {
 		return this.wasNull;
 	}
 
-    protected JSONReader(IOAdapterLoader loader, JSONScanner sc, boolean isMap) throws Exception {
-        super(loader, isMap);
+    protected JSONReader(JSONScanner sc, boolean isMap) throws Exception {
+        super(isMap);
         this.sc = sc;
         buffer = new CharArrayWriterNTS();
         sc.setRawInputMode(true);
@@ -325,7 +323,7 @@ public class JSONReader extends TextReader {
         JSONReader jsonReader;
         switch ((char) ch) {
             case '[': case '{':
-                jsonReader = createChunkedStream(this.getLoader(), this.sc, ch == '{');
+                jsonReader = createChunkedStream(this.sc, ch == '{');
                 break;
             case 'n':
                 if (sc.trySkipAscii("ull", true)) {
@@ -338,8 +336,8 @@ public class JSONReader extends TextReader {
         return jsonReader;
     }
 
-    protected JSONReader createChunkedStream(IOAdapterLoader loader, JSONScanner sc, boolean isMap) throws Exception {
-        return new JSONReader(loader, sc, isMap);
+    protected JSONReader createChunkedStream(JSONScanner sc, boolean isMap) throws Exception {
+        return new JSONReader(sc, isMap);
     }
 
     private static RuntimeException throwSyntaxError(String s) {
@@ -464,7 +462,7 @@ public class JSONReader extends TextReader {
     }
 
     public static void readObject(Object entity, Reader reader) throws Exception {
-        AutoCloseStream in = new JSONReader(IOAdapter.getLoader(true), reader);
+        AutoCloseStream in = new JSONReader(reader);
         IOField[] fields = IOEntity.registerSerializableFields(entity.getClass());
         in.readEntity(entity, fields);
     }

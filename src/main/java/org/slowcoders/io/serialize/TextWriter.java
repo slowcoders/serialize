@@ -4,8 +4,8 @@ import org.slowcoders.util.Debug;
 
 public abstract class TextWriter extends DataWriter.AggregatedStream {
 
-	TextWriter(IOAdapterLoader loader) {
-		super(loader);
+	TextWriter() {
+		super();
 	}
 
 	public boolean shouldEncodeEnumToBitSet() {

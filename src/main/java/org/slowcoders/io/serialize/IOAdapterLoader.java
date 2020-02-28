@@ -3,27 +3,30 @@ package org.slowcoders.io.serialize;
 import org.slowcoders.util.Debug;
 import org.slowcoders.util.ClassUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class IOAdapterLoader {
+public final class IOAdapterLoader {
 
 
-    private static final String TRANSLATOR_SUFFIX = "_Adapter";
+    private static final IOAdapterLoader instance;
 
-    private static final HashMap<Class<?>, IOAdapter> defaultAdapters = new HashMap<>();
-
-    private static final ArrayList<InheritableAdapter> defaultInheritableAdapters = new ArrayList<>();
+    private final ArrayList<InheritableAdapter> inheritableAdapters = new ArrayList<>();
 
     private final HashMap<Object, IOAdapter> adapters = new HashMap<>();
 
-//    private final CustomAdapterSearchKey customAdapterSearchKey = new CustomAdapterSearchKey();
-//
     private final ArrayList<FactoryResolver> factories = new ArrayList<>();
 
-    protected IOAdapterLoader() {
+    static {
+        instance = new IOAdapterLoader();
+        instance.init();
+    }
+
+    protected IOAdapterLoader() { }
+
+    protected void init() {
+        loadDefaultAdapters(adapters);
         addInheritableFactory(Iterable.class, IOAdapters._Collection.factory);
         addInheritableFactory(Set.class, IOAdapters._Set.factory);
         addInheritableFactory(Map.class, IOAdapters._Map.factory);
@@ -38,18 +41,22 @@ public class IOAdapterLoader {
     }
 
     public static <T, E> IOAdapter<T, E> registerDefaultAdapter(Class<T> type, IOAdapter<T, E> adapter) {
-        synchronized (defaultAdapters) {
+        return instance.registerAdapter(type, adapter);
+    }
+
+    public <T, E> IOAdapter<T, E> registerAdapter(Class<T> type, IOAdapter<T, E> adapter) {
+        synchronized (adapters) {
             if ((type.getModifiers() & Modifier.FINAL) != 0) {
-                IOAdapter old = defaultAdapters.put(type, adapter);
+                IOAdapter old = adapters.put(type, adapter);
                 if (Debug.DEBUG && old != null) {
                     Debug.wtf("duplicated adapter registering " + type.getName());
                 }
             }
             else {
-                int index = defaultInheritableAdapters.size();
+                int index = inheritableAdapters.size();
                 int insertIndex = index;
                 for (; --index > 0;) {
-                    InheritableAdapter entry = defaultInheritableAdapters.get(index);
+                    InheritableAdapter entry = inheritableAdapters.get(index);
                     if (type.isAssignableFrom(entry.topClass)) {
                         if (entry.topClass == type) {
                             Debug.wtf("duplicated adapter registering " + type.getName());
@@ -57,37 +64,31 @@ public class IOAdapterLoader {
                         index = insertIndex;
                     }
                 }
-                defaultInheritableAdapters.add(insertIndex, new InheritableAdapter(type, adapter));
+                inheritableAdapters.add(insertIndex, new InheritableAdapter(type, adapter));
             }
         }
         return adapter;
     }
 
-    public IOAdapter loadAdapter(Type type) {
+    public static IOAdapter load(Type type) {
+        return instance.loadAdapter(type);
+    }
+
+
+    private IOAdapter loadAdapter(Type type) {
         IOAdapter tr;
 
-        Class<?> clazz = ClassUtils.toClass(type);
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field f : fields) {
-            /**
-             * IOAdapter 를 포함하는 Class를 초기화하기 위해
-             * Static 필드들을 access 한다.
-             */
-            if (Modifier.isStatic(f.getModifiers())) {
-                try {
-                    f.setAccessible(true);
-                    Object v = f.get(null);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
+        Class<?> clazz = ClassUtils.toClass(type);
 
         tr = adapters.get(type);
+        if (tr == null) {
+            tr = adapters.get(type);
+        }
         if (tr != null) {
             return tr;
         }
+
 
         IOCtrl ioctrl = clazz.getAnnotation(IOCtrl.class);
         if (ioctrl != null && ioctrl.adapter() != null) {
@@ -97,8 +98,26 @@ public class IOAdapterLoader {
                 return tr;
             }
         }
+        else {
+            try {
+                /**
+                 * IOAdapter 를 포함하는 Class를 초기화하기 위해
+                 * Static 필드들을 access 한다.
+                 */
+                String cname = clazz.getName();
+                Class.forName(cname);
+                // adapter 가 등록되었을 수 있다. 다시 검사.
+                tr = adapters.get(type);
+                if (tr != null) {
+                    return tr;
+                }
+            }
+            catch (Exception e) {
+                Debug.wtf(e);
+            }
+        }
 
-        tr = findDefaultAdapter(clazz, adapters);
+        tr = findInheritableAdapter(clazz, adapters);
         if (tr != null) {
             return tr;
         }
@@ -131,26 +150,30 @@ public class IOAdapterLoader {
         return tr;
     }
 
-    public static IOAdapter findDefaultAdapter(Class<?> clazz, HashMap<Object, IOAdapter> localAdapters) {
-        IOAdapter tr;
-        synchronized (defaultAdapters) {
-            tr = defaultAdapters.get(clazz);
-            if (tr != null) {
-                return tr;
-            }
-
-            for (int i = defaultInheritableAdapters.size(); --i > 0; ) {
-                InheritableAdapter entry = defaultInheritableAdapters.get(i);
+    private IOAdapter findInheritableAdapter(Class<?> clazz, HashMap<Object, IOAdapter> localAdapters) {
+        IOAdapter tr = null;
+        for (int i = inheritableAdapters.size(); --i > 0; ) {
+            InheritableAdapter entry = inheritableAdapters.get(i);
                 if ((tr = entry.getAdapter(clazz)) != null) {
                     if (localAdapters != null) {
                         localAdapters.put(clazz, tr);
                     }
-                    return tr;
-                }
+                break;
             }
         }
         return tr;
     }
+
+//    protected IOAdapter findDefaultAdapter(Class<?> clazz, HashMap<Object, IOAdapter> localAdapters) {
+//        IOAdapter tr;
+//        synchronized (adapters) {
+//            tr = adapters.get(clazz);
+//            if (tr == null) {
+//                tr = findDefaultInheritableAdapter(clazz, localAdapters);
+//            }
+//        }
+//        return tr;
+//    }
 
 
 //    private Factory makeFactory(Class<? extends Factory> factoryType) {
@@ -230,9 +253,7 @@ public class IOAdapterLoader {
     }
 
 
-    static {
-
-        HashMap<Class<?>, IOAdapter> adapters = defaultAdapters;
+    protected void loadDefaultAdapters(HashMap<Object, IOAdapter> adapters) {
 
         adapters.put(boolean.class, new IOAdapters._Boolean.Adapter(true));
         adapters.put(byte.class, new IOAdapters._Byte.Adapter(true));
@@ -264,8 +285,6 @@ public class IOAdapterLoader {
         adapters.put(long[].class, IOAdapters._LongArray.adapter);
         adapters.put(float[].class, IOAdapters._FloatArray.adapter);
         adapters.put(double[].class, IOAdapters._DoubleArray.adapter);
-
-        new HashMap<>(adapters);
 
         PredefinedAdapters.registerAdapters();
 

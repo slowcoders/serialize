@@ -8,8 +8,8 @@ public abstract class TextReader extends DataReader.AutoCloseStream {
 
 	private boolean isMap;
 
-	public TextReader(IOAdapterLoader loader, boolean isMap) {
-		super(loader);
+	public TextReader(boolean isMap) {
+		super();
 		this.isMap = isMap;
 	}
 

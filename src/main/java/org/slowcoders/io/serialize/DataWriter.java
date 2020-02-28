@@ -11,15 +11,7 @@ import java.util.Map.Entry;
 
 public abstract class DataWriter {
 
-    private IOAdapterLoader loader;
-
-    public DataWriter(IOAdapterLoader loader) {
-        this.loader = loader;
-    }
-
-    public final IOAdapterLoader getLoader() {
-        return this.loader;
-    }
+    public DataWriter() {}
 
     public boolean shouldEncodeEnumToBitSet() {
         return true;
@@ -151,7 +143,7 @@ public abstract class DataWriter {
             this.writeNull();
         }
         else {
-            IOAdapter<Object, ?> adapter = loader.loadAdapter(v.getClass());
+            IOAdapter<Object, ?> adapter = IOAdapterLoader.load(v.getClass());
             adapter.write(v, this);
         }
     }
@@ -184,8 +176,8 @@ public abstract class DataWriter {
 
     public static abstract class AggregatedStream extends DataWriter {
 
-        public AggregatedStream(IOAdapterLoader loader) {
-            super(loader);
+        public AggregatedStream() {
+            super();
         }
 
         protected abstract boolean isMap();

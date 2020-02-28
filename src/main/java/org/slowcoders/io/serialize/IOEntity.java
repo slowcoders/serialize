@@ -142,11 +142,11 @@ public interface IOEntity {
     }
 
     static JSONObject toJSON(Object obj) {
-        IOField[] fields = registerSerializableFields(obj.getClass());
+        IOField[] fields = IOEntity.registerSerializableFields(obj.getClass());
         JSONObject json = new JSONObject();
         try {
             for (IOField si : fields) {
-                Object v = si.getFieldValue(obj);
+                Object v = si.getReflectionField().get(obj);
                 if (v == null) {
                     v = JSONObject.NULL;
                 }
@@ -162,28 +162,6 @@ public interface IOEntity {
         return json;
     }
 
-    static String toString(Object obj) {
-        StringBuilder sb = new StringBuilder();
-        dumpDebugInfo(obj, sb, ",\n");
-        return sb.toString();
-    }
-
-    static void dumpDebugInfo(Object obj, StringBuilder sb, String separator) {
-        try {
-            IOField[] fields = registerSerializableFields(obj.getClass());
-            for (IOField si : fields) {
-                Debug.Assert(si != null);
-                if (si.getReflectionField() != null) {
-                    sb.append(si.getFieldName()).append(':');
-                    sb.append(si.getFieldValue(obj));
-                    sb.append(separator);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        sb.setLength(sb.length() - separator.length());
-    }
 
     static void initEntity(Object entity, HashMap<String, Object> map) throws Exception {
         IOField[] slots = registerSerializableFields(entity.getClass());

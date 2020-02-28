@@ -31,14 +31,10 @@ public abstract class IOAdapter<T, E> {
 		this.write((T)v, writer);
 	}
 
-	public synchronized static IOAdapterLoader getLoader(boolean readImmutable) {
-		return Singleton.defLoader;
-	}
-
 	/*internal*/ PrimitiveAdapter asPrimitiveAdapter() { return null; }
 
 	public static IOAdapter getDefaultAdapter(Type itemType) {
-		return getLoader(false).loadAdapter(itemType);
+		return IOAdapterLoader.load(itemType);
 	}
 
 	public static IOAdapter getImmutableListAdapter(Type itemType) {

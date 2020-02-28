@@ -19,13 +19,13 @@ public class StreamWriter extends DataWriter.AggregatedStream implements StreamD
 
 	private boolean isMap;
 
-	private StreamWriter(IOAdapterLoader loader, OutputStream out, boolean isMap) throws Exception {
-		super(loader);
+	private StreamWriter(OutputStream out, boolean isMap) throws Exception {
+		super();
 		init(out, null, isMap);
 	}
 	
 	public StreamWriter(DataWriter parent, String type, boolean isMap) throws Exception {
-		super(parent.getLoader());
+		super();
 		Debug.Assert(parent != null);
 		this.parent = parent;
 		this.baos = new ByteArrayOutputStream();
@@ -50,14 +50,14 @@ public class StreamWriter extends DataWriter.AggregatedStream implements StreamD
 	}
 	
 	public static void writeEntity(Object entity, OutputStream out0) throws Exception {
-		StreamWriter out = new StreamWriter(IOAdapter.getLoader(false), out0, true);
+		StreamWriter out = new StreamWriter(out0, true);
 		out.writeEntity(entity);
 		return;
 	}
 
 	public static byte[] toByteArray(Object entity) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		StreamWriter out = new StreamWriter(IOAdapter.getLoader(false), baos, true);
+		StreamWriter out = new StreamWriter(baos, true);
 		out.writeEntity(entity);
 		byte[] data = out.toByteArray(baos);
 		return data;

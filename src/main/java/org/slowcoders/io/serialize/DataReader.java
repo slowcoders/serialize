@@ -10,11 +10,9 @@ import java.util.Set;
 public abstract class DataReader {
 
 	private Object context;
-	private IOAdapterLoader loader;
 	private boolean isImmutable;
 
-	public DataReader(IOAdapterLoader loader) {
-		this.loader = loader;
+	public DataReader() {
 		this.isImmutable = true;
 	}
 
@@ -24,8 +22,6 @@ public abstract class DataReader {
 
 	public final boolean isImmutable() { return isImmutable; }
 
-	public final IOAdapterLoader getLoader() { return this.loader; }
-	
 	protected final void setContext_unsafe(Object context) {
 		this.context = context;
 	}
@@ -229,7 +225,7 @@ public abstract class DataReader {
 	
 	public static abstract class AutoCloseStream extends DataReader {
 
-		AutoCloseStream(IOAdapterLoader loader) { super(loader); }
+		AutoCloseStream() { super(); }
 
 		public abstract boolean isClosed();
 

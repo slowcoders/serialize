@@ -21,7 +21,7 @@ public class JSONWriter extends TextWriter {
     }
 
     private JSONWriter(DataWriter parent, String compositeType, boolean isMap, Appendable builder, int indent) throws IOException {
-        super(parent != null ? parent.getLoader() : IOAdapter.getLoader(false));
+        super();
         this.builder = builder;
         this.indent = indent;
 

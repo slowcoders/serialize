@@ -935,7 +935,7 @@ public abstract class IOAdapters {
 			}
 
 			protected _Iterable makeAdapter(Type itemType, IOAdapterLoader adapterLoader) {
-                IOAdapter itemAdapter = adapterLoader.loadAdapter(itemType);
+                IOAdapter itemAdapter = adapterLoader.load(itemType);
 				return createAdapter(itemAdapter);
 			}
 
@@ -1100,8 +1100,8 @@ public abstract class IOAdapters {
 			}
 
             protected _Dictionary makeAdapter(Type keyType, Type valueType, IOAdapterLoader adapterLoader) {
-                IOAdapter keyAdapter = adapterLoader.loadAdapter(keyType);
-                IOAdapter valueAdapter = adapterLoader.loadAdapter(valueType);
+                IOAdapter keyAdapter = adapterLoader.load(keyType);
+                IOAdapter valueAdapter = adapterLoader.load(valueType);
                 _Dictionary adapter = createAdapter(keyAdapter, valueAdapter);
                 return adapter;
             }
