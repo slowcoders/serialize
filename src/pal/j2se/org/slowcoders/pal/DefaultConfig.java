@@ -65,7 +65,7 @@ public class DefaultConfig implements PAL.Impl {
         File downloadDir = new File(dbDir + "/Downloads");
         File cacheDir = new File(dbDir + "/Cache");
 
-        private DefaultStorage() {
+        private Storage() {
             settingsDir.mkdirs();
             downloadDir.mkdirs();
             cacheDir.mkdirs();
